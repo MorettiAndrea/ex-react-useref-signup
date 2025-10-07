@@ -7,9 +7,13 @@ export default function App() {
   const [yearOfService, setYearOfService] = useState("");
   const [description, setDescription] = useState("");
 
+  // variabili per controlli
+
   const letters = "abcdefghijklmnopqrstuvwxyz";
   const numbers = "0123456789";
   const symbols = "!@#$%^&*()-_=+[]{}|;:'\\,.<>?/`~";
+
+  // form submit
 
   const onSubmit = (e) => {
     e.preventDefault();
@@ -36,20 +40,22 @@ export default function App() {
     }
   };
 
+  // validatori errori
+
   const userNameValidator = useMemo(() => {
     const isUserNameValid = userName
-      .split(" ")
+      .split("")
       .every(
         (char) =>
           letters.includes(char.toLowerCase()) ||
           numbers.includes(char.toLowerCase())
       );
-    return isUserNameValid && userName.length > 6;
+    return isUserNameValid && userName.trim().length >= 6;
   }, [userName]);
 
   const passwordValidator = useMemo(() => {
     return (
-      password.length > 8 &&
+      password.trim().length >= 8 &&
       password.split("").some((c) => letters.includes(c.toLowerCase())) &&
       password.split("").some((c) => c >= "A" && c <= "Z") &&
       password.split("").some((c) => numbers.includes(c)) &&
@@ -61,6 +67,22 @@ export default function App() {
     return description.trim().length >= 100 && description.length <= 1000;
   }, [description]);
 
+  const buttonLock = useMemo(() => {
+    return (
+      !userNameValidator ||
+      !passwordValidator ||
+      !descriptionValidator ||
+      !specialization.trim() ||
+      yearOfService < 1 ||
+      !yearOfService
+    );
+  }, [
+    userNameValidator,
+    passwordValidator,
+    descriptionValidator,
+    specialization,
+    yearOfService,
+  ]);
   // dom
   return (
     <div className="container mt-4">
@@ -70,6 +92,15 @@ export default function App() {
             <label htmlFor="userName" className="form-label">
               Username
             </label>
+            <p
+              className={
+                userNameValidator
+                  ? "text-center text-success "
+                  : "text-center text-danger"
+              }
+            >
+              {userNameValidator ? "Username valido" : "Username non valido"}
+            </p>
             <input
               type="text"
               id="userName"
@@ -84,6 +115,15 @@ export default function App() {
             <label htmlFor="password" className="form-label">
               Password
             </label>
+            <p
+              className={
+                passwordValidator
+                  ? "text-center text-success "
+                  : "text-center text-danger"
+              }
+            >
+              {passwordValidator ? "Password valida" : "Password non valida"}
+            </p>
             <input
               type="password"
               id="password"
@@ -98,6 +138,15 @@ export default function App() {
             <label htmlFor="specialization" className="form-label">
               Specializzazione
             </label>
+            <p
+              className={
+                specialization
+                  ? "text-center text-success "
+                  : "text-center text-danger"
+              }
+            >
+              {specialization ? "Campo scelto valido" : "Scegli un campo"}
+            </p>
             <select
               id="specialization"
               className="form-select"
@@ -112,11 +161,22 @@ export default function App() {
           </div>
         </div>
 
-        <div className="row mb-3">
+        <div className="row my-3">
           <div className="col-4">
             <label htmlFor="yearOfService" className="form-label">
               Anni di esperienza
             </label>
+            <p
+              className={
+                yearOfService < 1 || !yearOfService
+                  ? "text-center text-danger "
+                  : "text-center text-success"
+              }
+            >
+              {yearOfService < 1 || !yearOfService
+                ? "Inserisci un numero "
+                : "Numero valido"}
+            </p>
             <input
               type="number"
               id="yearOfService"
@@ -124,7 +184,7 @@ export default function App() {
               value={yearOfService}
               placeholder="Inserisci gli anni di esperienza"
               onChange={(e) => setYearOfService(e.target.value)}
-              min="0"
+              min="1"
             />
           </div>
 
@@ -132,6 +192,17 @@ export default function App() {
             <label htmlFor="description" className="form-label">
               Descrizione
             </label>
+            <p
+              className={
+                descriptionValidator
+                  ? "text-center text-success "
+                  : "text-center text-danger"
+              }
+            >
+              {descriptionValidator
+                ? "Descrizione inserita"
+                : "inserisci una descrizione"}
+            </p>
             <textarea
               id="description"
               className="form-control"
@@ -144,10 +215,12 @@ export default function App() {
           <div className="col-4 d-flex align-items-end">
             <button
               type="submit"
-              className="btn btn-primary w-100"
-              disabled={formErrors}
+              className={
+                buttonLock ? "btn btn-danger w-100" : "btn btn-primary w-100"
+              }
+              disabled={buttonLock}
             >
-              Conferma
+              {buttonLock ? "Controlla i dati immessi" : "Conferma"}
             </button>
           </div>
         </div>
