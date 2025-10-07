@@ -1,4 +1,4 @@
-💡 Premessa: Stai sviluppando un form di registrazione per una piattaforma dedicata ai giovani sviluppatori web. Gli utenti devono iscriversi indicando le loro competenze e specializzazioni.
+<!-- 💡 Premessa: Stai sviluppando un form di registrazione per una piattaforma dedicata ai giovani sviluppatori web. Gli utenti devono iscriversi indicando le loro competenze e specializzazioni.
 
 📌 Milestone 1: Creare un Form con Campi Controllati
 Crea un form di registrazione con i seguenti campi controllati (gestiti con useState):
@@ -17,13 +17,11 @@ Crea un form di registrazione con i seguenti campi controllati (gestiti con useS
 
 Aggiungi una validazione al submit, verificando che:
 
-<!-- errori -->
-
 Tutti i campi siano compilati
 L'input Anni di esperienza sia un numero positivo
 La Specializzazione sia selezionata
 
-Al submit, se il form è valido, stampa in console i dati.
+Al submit, se il form è valido, stampa in console i dati. -->
 
 📌 Milestone 2: Validare in tempo reale
 Aggiungere la validazione in tempo reale dei seguenti campi:

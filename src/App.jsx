@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 export default function App() {
   const [userName, setUserName] = useState("");
@@ -6,6 +6,10 @@ export default function App() {
   const [specialization, setSpecialization] = useState("");
   const [yearOfService, setYearOfService] = useState("");
   const [description, setDescription] = useState("");
+
+  const letters = "abcdefghijklmnopqrstuvwxyz";
+  const numbers = "0123456789";
+  const symbols = "!@#$%^&*()-_=+[]{}|;:'\\,.<>?/`~";
 
   const onSubmit = (e) => {
     e.preventDefault();
@@ -32,6 +36,32 @@ export default function App() {
     }
   };
 
+  const userNameValidator = useMemo(() => {
+    const isUserNameValid = userName
+      .split(" ")
+      .every(
+        (char) =>
+          letters.includes(char.toLowerCase()) ||
+          numbers.includes(char.toLowerCase())
+      );
+    return isUserNameValid && userName.length > 6;
+  }, [userName]);
+
+  const passwordValidator = useMemo(() => {
+    return (
+      password.length > 8 &&
+      password.split("").some((c) => letters.includes(c.toLowerCase())) &&
+      password.split("").some((c) => c >= "A" && c <= "Z") &&
+      password.split("").some((c) => numbers.includes(c)) &&
+      password.split("").some((c) => symbols.includes(c))
+    );
+  }, [password]);
+
+  const descriptionValidator = useMemo(() => {
+    return description.trim().length >= 100 && description.length <= 1000;
+  }, [description]);
+
+  // dom
   return (
     <div className="container mt-4">
       <form onSubmit={onSubmit}>
@@ -112,7 +142,11 @@ export default function App() {
           </div>
 
           <div className="col-4 d-flex align-items-end">
-            <button type="submit" className="btn btn-primary w-100">
+            <button
+              type="submit"
+              className="btn btn-primary w-100"
+              disabled={formErrors}
+            >
               Conferma
             </button>
           </div>
