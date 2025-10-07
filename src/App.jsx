@@ -7,25 +7,34 @@ export default function App() {
   const [yearOfService, setYearOfService] = useState("");
   const [description, setDescription] = useState("");
 
+  const onSubmit = (e) => {
+    e.preventDefault();
+
+    const errorsCheck =
+      !userName.trim() ||
+      !password.trim() ||
+      !specialization.trim() ||
+      !yearOfService.trim() ||
+      yearOfService < 0 ||
+      !description.trim();
+
+    if (errorsCheck) {
+      alert("Controlla i dati immessi");
+      return;
+    } else {
+      console.log("Dati inseriti correttamente!:", {
+        userName,
+        password,
+        specialization,
+        yearOfService,
+        description,
+      });
+    }
+  };
+
   return (
     <div className="container mt-4">
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          console.log(
-            "nome: ",
-            userName,
-            "password",
-            password,
-            "specialization",
-            specialization,
-            "yearOfService",
-            yearOfService,
-            "description",
-            description
-          );
-        }}
-      >
+      <form onSubmit={onSubmit}>
         <div className="row mb-3">
           <div className="col-4">
             <label htmlFor="userName" className="form-label">
@@ -37,7 +46,6 @@ export default function App() {
               className="form-control"
               value={userName}
               placeholder="Inserisci il nome"
-              required
               onChange={(e) => setUserName(e.target.value)}
             />
           </div>
@@ -50,9 +58,8 @@ export default function App() {
               type="password"
               id="password"
               className="form-control"
-              placeholder="Inserisci la password"
               value={password}
-              required
+              placeholder="Inserisci la password"
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
@@ -78,18 +85,16 @@ export default function App() {
         <div className="row mb-3">
           <div className="col-4">
             <label htmlFor="yearOfService" className="form-label">
-              Anni di Servizio
+              Anni di esperienza
             </label>
             <input
               type="number"
               id="yearOfService"
-              className="form-control no-spinner"
+              className="form-control"
               value={yearOfService}
-              min={0}
-              max={60}
-              required
-              placeholder="Inserisci gli anni di servizio"
+              placeholder="Inserisci gli anni di esperienza"
               onChange={(e) => setYearOfService(e.target.value)}
+              min="0"
             />
           </div>
 
@@ -97,18 +102,17 @@ export default function App() {
             <label htmlFor="description" className="form-label">
               Descrizione
             </label>
-            <input
-              type="text"
+            <textarea
               id="description"
               className="form-control"
               value={description}
-              required
-              placeholder="Inserisci una descrizione"
+              placeholder="Scrivi qualcosa su di te"
               onChange={(e) => setDescription(e.target.value)}
-            />
+            ></textarea>
           </div>
-          <div className="col-4">
-            <button type="submit" className="btn btn-primary">
+
+          <div className="col-4 d-flex align-items-end">
+            <button type="submit" className="btn btn-primary w-100">
               Conferma
             </button>
           </div>

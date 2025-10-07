@@ -17,6 +17,8 @@ Crea un form di registrazione con i seguenti campi controllati (gestiti con useS
 
 Aggiungi una validazione al submit, verificando che:
 
+<!-- errori -->
+
 Tutti i campi siano compilati
 L'input Anni di esperienza sia un numero positivo
 La Specializzazione sia selezionata
