@@ -1,38 +1,44 @@
 import { useRef, useMemo, useState } from "react";
 
 export default function App() {
-  const [fullName, setFullName] = useState("");
+  // campi controllati
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
-  const [specialization, setSpecialization] = useState("");
-  const [yearOfService, setYearOfService] = useState("");
   const [description, setDescription] = useState("");
 
-  // variabili per controlli
+  // campi non controllati
+  const fullNameRef = useRef();
+  const yearOfServiceRef = useRef();
+  const specializationRef = useRef();
 
+  // variabili per controlli
   const letters = "abcdefghijklmnopqrstuvwxyz";
   const numbers = "0123456789";
   const symbols = "!@#$%^&*()-_=+[]{}|;:'\\,.<>?/`~";
 
   // form submit
-
   const onSubmit = (e) => {
     e.preventDefault();
 
-    const errorsCheck = !fullName.trim();
-    !userName.trim() ||
+    const fullName = fullNameRef.current.value.trim();
+    const specialization = specializationRef.current.value.trim();
+    const yearOfService = yearOfServiceRef.current.value.trim();
+
+    const errorsCheck =
+      !fullName ||
+      !userName.trim() ||
       !password.trim() ||
-      !specialization.trim() ||
-      !yearOfService.trim() ||
-      yearOfService < 0 ||
-      !NaN(yearOfService);
-    !description.trim();
+      !description.trim() ||
+      !specialization ||
+      isNaN(yearOfService) ||
+      Number(yearOfService) < 1;
 
     if (errorsCheck) {
       alert("Controlla i dati immessi");
       return;
     } else {
       console.log("Dati inseriti correttamente!:", {
+        fullName,
         userName,
         password,
         specialization,
@@ -43,7 +49,6 @@ export default function App() {
   };
 
   // validatori errori
-
   const userNameValidator = useMemo(() => {
     const isUserNameValid = userName
       .split("")
@@ -70,25 +75,20 @@ export default function App() {
   }, [description]);
 
   const buttonLock = useMemo(() => {
+    const fullName = fullNameRef.current?.value.trim();
+    const specialization = specializationRef.current?.value.trim();
+    const yearOfService = yearOfServiceRef.current?.value.trim();
+
     return (
       !fullName ||
       !userNameValidator ||
       !passwordValidator ||
       !descriptionValidator ||
-      !specialization.trim() ||
-      yearOfService < 1 ||
-      !yearOfService
+      !specialization ||
+      isNaN(yearOfService) ||
+      Number(yearOfService) < 1
     );
-  }, [
-    fullName,
-    userNameValidator,
-    passwordValidator,
-    descriptionValidator,
-    specialization,
-    yearOfService,
-  ]);
-
-  // dom
+  }, [userNameValidator, passwordValidator, descriptionValidator]);
 
   return (
     <div className="container mt-4">
@@ -98,22 +98,12 @@ export default function App() {
             <label htmlFor="fullName" className="form-label">
               Full Name
             </label>
-            <p
-              className={
-                fullName
-                  ? "text-center text-success"
-                  : "text-center text-danger"
-              }
-            >
-              {fullName ? "Nome valido" : "Nome non valido"}
-            </p>
             <input
               type="text"
               id="fullName"
               className="form-control"
-              value={fullName}
               placeholder="Inserisci il nome"
-              onChange={(e) => setFullName(e.target.value)}
+              ref={fullNameRef}
             />
           </div>
 
@@ -169,20 +159,10 @@ export default function App() {
             <label htmlFor="specialization" className="form-label">
               Specializzazione
             </label>
-            <p
-              className={
-                specialization
-                  ? "text-center text-success"
-                  : "text-center text-danger"
-              }
-            >
-              {specialization ? "Campo scelto valido" : "Scegli un campo"}
-            </p>
             <select
               id="specialization"
               className="form-select"
-              value={specialization}
-              onChange={(e) => setSpecialization(e.target.value)}
+              ref={specializationRef}
             >
               <option value="">Seleziona una specializzazione</option>
               <option value="Full Stack">Full Stack</option>
@@ -195,24 +175,12 @@ export default function App() {
             <label htmlFor="yearOfService" className="form-label">
               Anni di esperienza
             </label>
-            <p
-              className={
-                yearOfService < 1 || !yearOfService
-                  ? "text-center text-danger"
-                  : "text-center text-success"
-              }
-            >
-              {yearOfService < 1 || !yearOfService
-                ? "Inserisci un numero"
-                : "Numero valido"}
-            </p>
             <input
               type="number"
               id="yearOfService"
               className="form-control"
-              value={yearOfService}
               placeholder="Inserisci gli anni di esperienza"
-              onChange={(e) => setYearOfService(e.target.value)}
+              ref={yearOfServiceRef}
               min="1"
             />
           </div>
