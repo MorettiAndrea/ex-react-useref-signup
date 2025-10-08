@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useRef, useMemo, useState } from "react";
 
 export default function App() {
   const [userName, setUserName] = useState("");
@@ -24,7 +24,8 @@ export default function App() {
       !specialization.trim() ||
       !yearOfService.trim() ||
       yearOfService < 0 ||
-      !description.trim();
+      !NaN(yearOfService);
+    !description.trim();
 
     if (errorsCheck) {
       alert("Controlla i dati immessi");
