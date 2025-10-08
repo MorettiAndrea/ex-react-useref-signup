@@ -1,6 +1,7 @@
 import { useRef, useMemo, useState } from "react";
 
 export default function App() {
+  const [fullName, setFullName] = useState("");
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const [specialization, setSpecialization] = useState("");
@@ -18,8 +19,8 @@ export default function App() {
   const onSubmit = (e) => {
     e.preventDefault();
 
-    const errorsCheck =
-      !userName.trim() ||
+    const errorsCheck = !fullName.trim();
+    !userName.trim() ||
       !password.trim() ||
       !specialization.trim() ||
       !yearOfService.trim() ||
@@ -70,6 +71,7 @@ export default function App() {
 
   const buttonLock = useMemo(() => {
     return (
+      !fullName ||
       !userNameValidator ||
       !passwordValidator ||
       !descriptionValidator ||
@@ -78,17 +80,43 @@ export default function App() {
       !yearOfService
     );
   }, [
+    fullName,
     userNameValidator,
     passwordValidator,
     descriptionValidator,
     specialization,
     yearOfService,
   ]);
+
   // dom
+
   return (
     <div className="container mt-4">
       <form onSubmit={onSubmit}>
         <div className="row mb-3">
+          <div className="col-4">
+            <label htmlFor="fullName" className="form-label">
+              Full Name
+            </label>
+            <p
+              className={
+                fullName
+                  ? "text-center text-success"
+                  : "text-center text-danger"
+              }
+            >
+              {fullName ? "Nome valido" : "Nome non valido"}
+            </p>
+            <input
+              type="text"
+              id="fullName"
+              className="form-control"
+              value={fullName}
+              placeholder="Inserisci il nome"
+              onChange={(e) => setFullName(e.target.value)}
+            />
+          </div>
+
           <div className="col-4">
             <label htmlFor="userName" className="form-label">
               Username
@@ -96,7 +124,7 @@ export default function App() {
             <p
               className={
                 userNameValidator
-                  ? "text-center text-success "
+                  ? "text-center text-success"
                   : "text-center text-danger"
               }
             >
@@ -107,7 +135,7 @@ export default function App() {
               id="userName"
               className="form-control"
               value={userName}
-              placeholder="Inserisci il nome"
+              placeholder="Inserisci lo username"
               onChange={(e) => setUserName(e.target.value)}
             />
           </div>
@@ -119,7 +147,7 @@ export default function App() {
             <p
               className={
                 passwordValidator
-                  ? "text-center text-success "
+                  ? "text-center text-success"
                   : "text-center text-danger"
               }
             >
@@ -134,7 +162,9 @@ export default function App() {
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
+        </div>
 
+        <div className="row mb-3">
           <div className="col-4">
             <label htmlFor="specialization" className="form-label">
               Specializzazione
@@ -142,7 +172,7 @@ export default function App() {
             <p
               className={
                 specialization
-                  ? "text-center text-success "
+                  ? "text-center text-success"
                   : "text-center text-danger"
               }
             >
@@ -160,9 +190,7 @@ export default function App() {
               <option value="Backend">Backend</option>
             </select>
           </div>
-        </div>
 
-        <div className="row my-3">
           <div className="col-4">
             <label htmlFor="yearOfService" className="form-label">
               Anni di esperienza
@@ -170,12 +198,12 @@ export default function App() {
             <p
               className={
                 yearOfService < 1 || !yearOfService
-                  ? "text-center text-danger "
+                  ? "text-center text-danger"
                   : "text-center text-success"
               }
             >
               {yearOfService < 1 || !yearOfService
-                ? "Inserisci un numero "
+                ? "Inserisci un numero"
                 : "Numero valido"}
             </p>
             <input
@@ -196,13 +224,13 @@ export default function App() {
             <p
               className={
                 descriptionValidator
-                  ? "text-center text-success "
+                  ? "text-center text-success"
                   : "text-center text-danger"
               }
             >
               {descriptionValidator
                 ? "Descrizione inserita"
-                : "inserisci una descrizione"}
+                : "Inserisci una descrizione"}
             </p>
             <textarea
               id="description"
@@ -210,14 +238,17 @@ export default function App() {
               value={description}
               placeholder="Scrivi qualcosa su di te"
               onChange={(e) => setDescription(e.target.value)}
+              rows="3"
             ></textarea>
           </div>
+        </div>
 
-          <div className="col-4 d-flex align-items-end">
+        <div className="row">
+          <div className="col-12 d-flex justify-content-center">
             <button
               type="submit"
               className={
-                buttonLock ? "btn btn-danger w-100" : "btn btn-primary w-100"
+                buttonLock ? "btn btn-danger w-50" : "btn btn-primary w-50"
               }
               disabled={buttonLock}
             >
